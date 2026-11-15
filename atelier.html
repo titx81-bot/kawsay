@@ -117,7 +117,6 @@ input[type=checkbox]{width:20px;height:20px;margin:0 8px 0 0;padding:0;accent-co
 <div class="card" id="addcard" style="display:none">
 <div class="ct">Agregar rol</div>
 <input id="p" placeholder="Personaje (ej. Rukia)">
-<input id="u" placeholder="ID del usuario" inputmode="numeric">
 <input id="f" placeholder="Fandom (ej. Bleach)">
 <select id="t"></select>
 <div class="dtl">Fecha de ingreso</div>
@@ -126,7 +125,7 @@ input[type=checkbox]{width:20px;height:20px;margin:0 8px 0 0;padding:0;accent-co
 <button id="add">Agregar</button>
 <div id="msg"></div>
 </div>
-<input id="q" placeholder="🔍 Buscar por personaje, ID, fandom o etiqueta">
+<input id="q" placeholder="🔍 Buscar por personaje, fandom o etiqueta">
 <div class="cnt" id="cnt"></div>
 <div id="list"></div>
 <div class="foot"><div id="seed"></div><button id="auth" class="edit">🔒 Solo para Rukia</button></div>
@@ -175,7 +174,7 @@ function stats(){
 function render(){
   stats();
   const q=$("q").value.trim().toLowerCase();
-  const res=items.filter(i=>[i.p,i.u,i.f,i.t||"miembro"].join(" ").toLowerCase().includes(q));
+  const res=items.filter(i=>[i.p,i.f,i.t||"miembro"].join(" ").toLowerCase().includes(q));
   $("cnt").textContent=res.length+" de "+items.length+" roles";
   const box=$("list");box.textContent="";
   const groups={};
@@ -191,8 +190,7 @@ function render(){
       const t=document.createElement("div");
       const b=document.createElement("b");b.textContent=i.p;
       {const tg=document.createElement("em");tg.className="tag "+(i.t||"miembro");tg.textContent=i.t||"miembro";b.append(" ",tg)}
-      const s=document.createElement("span");s.className="id";s.textContent="ID: ";
-      const code=document.createElement("code");code.textContent=i.u;s.append(code);
+      const s=document.createElement("span");s.className="id";s.textContent="";
       const l=document.createElement("label");l.className="intro";
       const c=document.createElement("input");c.type="checkbox";const same=items.filter(j=>j.u.trim()===i.u.trim());c.checked=same.some(j=>j.intro);
       c.disabled=!isAdmin;c.onchange=async()=>{if(c.checked){burst(c);celeb.set(i.u.trim(),Date.now())}try{await Promise.all(same.map(j=>col.doc(j.id).update({intro:c.checked})))}catch(e){c.checked=!c.checked;msg("No se pudo actualizar")}};
@@ -200,7 +198,7 @@ function render(){
       const fd=document.createElement("span");fd.className="id";if(i.fi)fd.textContent="Ingreso: "+fmt(i.fi);
       const bo=same.some(j=>j.bz);
       if(bo){const bt=document.createElement("em");bt.className="tag booster";bt.textContent="booster";b.append(" ",bt)}
-      t.append(b,s);if(i.fi)t.append(fd);t.append(l);
+      t.append(b);if(i.fi)t.append(fd);t.append(l);
       const wn=Math.max(0,...same.map(j=>j.w||0)),ia=same.some(j=>j.inact);
       const setU=async data=>{try{await Promise.all(same.map(j=>col.doc(j.id).update(data)))}catch(e){msg("No se pudo actualizar")}};
       const st=document.createElement("div");st.className="st";
@@ -253,7 +251,7 @@ function render(){
       const ed=document.createElement("button");ed.className="edit";ed.textContent="Editar";
       ed.onclick=()=>{
         d.textContent="";d.style.display="block";
-        const info=document.createElement("div");info.className="id";info.style.marginBottom="8px";info.textContent="ID: "+i.u;
+        const info=document.createElement("div");info.className="id";info.style.marginBottom="8px";info.textContent="Editar rol";
         const ip=document.createElement("input");ip.value=i.p;ip.placeholder="Personaje";
         const iff=document.createElement("input");iff.value=i.f;iff.placeholder="Fandom";
         const sel=document.createElement("select");fill(sel,i.t);
@@ -282,19 +280,19 @@ function render(){
 }
 fill($("t"));$("fi").value=today();$("q").oninput=render;
 $("add").onclick=async()=>{
-  const p=$("p").value.trim(),u=$("u").value.trim(),f=$("f").value.trim(),t=$("t").value,fi=$("fi").value||today();
-  if(!p||!u||!f){msg("Llena los tres campos");return}
+  const p=$("p").value.trim(),f=$("f").value.trim(),t=$("t").value,fi=$("fi").value||today();
+  if(!p||!f){msg("Llena personaje y fandom");return}
   if(!col){msg("Base de datos no disponible");return}
   const n=s=>s.trim().toLowerCase();
-  const mine=items.filter(i=>i.u.trim()===u);
+  const mine=[];
   if(mine.length>=2){msg("Este usuario ya tiene 2 roles: "+mine.map(i=>i.p+" ("+i.f+")").join(", "));return}
   const dup=items.find(i=>n(i.p)===n(p)&&n(i.f)===n(f));
   if(dup){msg("¡Este rol ya está ocupado! "+dup.p+" ("+dup.f+") lo tiene el ID "+dup.u);return}
   try{
     const bzv=$("bz").checked||mine.some(j=>j.bz);
-    await col.add({p,u,f,t,fi,bz:bzv,intro:items.some(j=>j.u.trim()===u&&j.intro),w:Math.max(0,...mine.map(j=>j.w||0)),inact:mine.some(j=>j.inact)});
+    await col.add({p,f,t,fi,bz:bzv,intro:false,w:Math.max(0,...mine.map(j=>j.w||0)),inact:mine.some(j=>j.inact)});
     if(bzv)await Promise.all(mine.filter(j=>!j.bz).map(j=>col.doc(j.id).update({bz:true})));
-    $("p").value=$("u").value=$("f").value="";$("t").value="miembro";$("fi").value=today();$("bz").checked=false;msg("Agregado ✓");
+    $("p").value=$("f").value="";$("t").value="miembro";$("fi").value=today();$("bz").checked=false;msg("Agregado ✓");
   }catch(e){msg("No se pudo guardar")}
 };
 function ui(){
@@ -317,7 +315,7 @@ onAuthStateChanged(auth,u=>{
   ui();render();
 });
 onSnapshot(collection(fdb,"atelier_roles"),sn=>{
-  items=sn.docs.map(d=>{const x={id:d.id,...d.data()};x.t=({owner:"founder","co-owner":"admin",mod:"helper"})[x.t]||x.t;return x}).sort((a,b)=>(a.p||"").localeCompare(b.p||""));
+  items=sn.docs.map(d=>{const x={id:d.id,...d.data()};x.u=x.id;x.t=({owner:"founder","co-owner":"admin",mod:"helper"})[x.t]||x.t;return x}).sort((a,b)=>(a.p||"").localeCompare(b.p||""));
   loaded=true;ui();render();
 },()=>{$("cnt").textContent="Error al cargar la lista"});
 render();ui();
