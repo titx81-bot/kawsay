@@ -51,7 +51,9 @@ input[type=checkbox]{width:20px;height:20px;margin:0 8px 0 0;padding:0;accent-co
 .warn{border-left:4px solid var(--brown);background:rgba(171,125,89,.16);padding:12px;border-radius:10px;margin-bottom:12px;font-size:15px}
 .cnt{color:var(--mut);font-size:13px;margin:2px 6px 0;text-align:right}
 #msg{color:var(--btx);font-size:14px;margin-top:10px;font-weight:600}
-.foot{text-align:center;margin-top:28px}.foot button{margin:6px 0 0;opacity:.75}
+.foot{text-align:center;margin-top:28px}.foot button{margin:6px 0 0}
+.foot #auth{background:none;border:0;box-shadow:none;color:var(--mut);font-size:12px;font-weight:600;opacity:.5;padding:6px 10px;transition:opacity .2s}
+.foot #auth:hover{opacity:.9;filter:none}
 .empty{text-align:center;color:var(--mut);padding:30px 10px}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 @keyframes fadeDown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:none}}
@@ -98,7 +100,7 @@ button:hover{filter:brightness(1.08)}
 <input id="q" placeholder="🔍 Buscar por personaje, ID, fandom o etiqueta">
 <div class="cnt" id="cnt"></div>
 <div id="list"></div>
-<div class="foot"><div id="seed"></div><button id="auth" class="edit">Admin</button></div>
+<div class="foot"><div id="seed"></div><button id="auth" class="edit">🔒 Solo para la owner</button></div>
 </main>
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -226,7 +228,7 @@ $("add").onclick=async()=>{
 };
 function ui(){
   $("addcard").style.display=isAdmin?"":"none";
-  $("auth").textContent=isAdmin?"Salir (admin)":"Admin";
+  $("auth").textContent=isAdmin?"Salir":"🔒 Solo para la owner";
   const sd=$("seed");sd.textContent="";
   if(isAdmin&&loaded&&!items.length){
     const b=document.createElement("button");b.textContent="Importar roles anteriores ("+SEED.length+")";
