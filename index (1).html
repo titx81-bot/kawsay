@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%8C%B8%3C/text%3E%3C/svg%3E">
+<title>Kawsay · Moderación</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Playfair+Display:wght@600;700&display=swap">
+<style>
+:root{--bg:#FFF6F3;--card:#FFFFFF;--tx:#3b2a1f;--mut:#8a6f5c;--bd:#f0d9d2;--soft:#fdeceb;--pink:#F5C1C3;--brown:#AB7D59;--btx:#7d5636;--rd:#c0453c;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#241812;--card:#33241b;--tx:#f7e9e3;--mut:#c9ab98;--bd:#4a3528;--soft:#3d2c22;--btx:#F5C1C3;--rd:#e0645a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#241812;--card:#33241b;--tx:#f7e9e3;--mut:#c9ab98;--bd:#4a3528;--soft:#3d2c22;--btx:#F5C1C3;--rd:#e0645a;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;color:var(--tx);font:16px/1.45 'Nunito',system-ui,sans-serif;background:radial-gradient(circle at 5% -5%,rgba(245,193,195,.6),transparent 45%),radial-gradient(circle at 100% 10%,rgba(171,125,89,.28),transparent 40%),var(--bg);background-attachment:fixed;min-height:100vh}
+main{max-width:620px;margin:0 auto;padding:16px 16px 40px}
+.hero{text-align:center;padding:30px 16px 24px;margin-bottom:18px;border-radius:26px;background:linear-gradient(135deg,#F5C1C3 0%,#e3ac9f 55%,#AB7D59 100%);color:#3a2415;box-shadow:0 10px 28px rgba(171,125,89,.35)}
+.hero .petal{font-size:22px;letter-spacing:10px;opacity:.85}
+h1{font:700 44px/1.1 'Playfair Display',Georgia,serif;letter-spacing:3px;margin:6px 0 4px}
+.hero p{margin:0;font-weight:600;letter-spacing:2px;text-transform:uppercase;font-size:13px;opacity:.85}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:20px;padding:16px;margin-bottom:14px;box-shadow:0 4px 16px rgba(171,125,89,.12)}
+.ct{font:700 18px 'Playfair Display',Georgia,serif;color:var(--btx);margin-bottom:12px}
+input,select{width:100%;box-sizing:border-box;padding:12px 14px;margin-bottom:10px;border:1.5px solid var(--bd);border-radius:14px;background:var(--soft);color:var(--tx);font:inherit;font-size:16px}
+input:focus,select:focus{outline:none;border-color:var(--brown);box-shadow:0 0 0 3px rgba(245,193,195,.7)}
+#q{border-radius:999px;padding-left:18px;background:var(--card);box-shadow:0 4px 14px rgba(171,125,89,.12)}
+button{padding:11px 16px;border:0;border-radius:14px;background:linear-gradient(135deg,#B88660,#8f633f);color:#fff;font:700 15px 'Nunito',system-ui,sans-serif;cursor:pointer}
+#add{width:100%;font-size:16px;padding:13px}
+button:active{transform:scale(.97)}
+button.del{background:var(--rd);padding:7px 12px;font-size:13px}
+button.sure{background:#fff;color:var(--rd);border:2px solid var(--rd)}
+button.edit{background:var(--soft);color:var(--btx);border:1px solid var(--bd);padding:7px 12px;font-size:13px;margin-right:6px}
+h2{display:flex;align-items:center;gap:10px;font:700 20px 'Playfair Display',Georgia,serif;margin:22px 0 10px;color:var(--btx)}
+h2::after{content:"";flex:1;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--pink),transparent)}
+h2 small{order:1;background:var(--pink);color:#5a3a24;font:700 12px 'Nunito',sans-serif;padding:2px 10px;border-radius:999px}
+.card.row{margin-bottom:10px;padding:12px 14px}
+.row{display:flex;align-items:center;gap:12px}
+.info{flex:1;min-width:0}
+.row b{display:block;font-size:17px}.row span{color:var(--mut);font-size:14px;word-break:break-all}
+.row .id{display:block;margin-top:3px}
+.av{width:46px;height:46px;border-radius:50%;flex:none;display:grid;place-items:center;font:700 21px 'Playfair Display',Georgia,serif;background:linear-gradient(135deg,var(--pink),#e3ac9f);color:#5a3a24;box-shadow:inset 0 0 0 2px rgba(255,255,255,.5)}
+.btns{display:flex;flex-direction:column;gap:6px}
+code{background:var(--soft);border:1px solid var(--bd);border-radius:8px;padding:2px 7px;font-size:13px;color:var(--btx)}
+.tag{font-style:normal;font-size:10.5px;font-weight:700;letter-spacing:.6px;border-radius:999px;padding:2px 9px;margin-left:6px;vertical-align:middle;text-transform:uppercase}
+.tag.miembro{background:var(--soft);color:var(--btx);border:1px solid var(--bd)}
+.tag.mod{background:var(--pink);color:#5a3a24}
+.tag.admin{background:#d99a9d;color:#3b1f20}
+.tag.co-owner{background:var(--brown);color:#fff}
+.tag.owner{background:#6b4528;color:#fff}
+input[type=checkbox]{width:20px;height:20px;margin:0 8px 0 0;padding:0;accent-color:var(--brown)}
+.intro{display:flex;align-items:center;margin-top:8px;font-size:14px;color:var(--mut)}
+.err{color:var(--rd);font-size:14px;margin-top:8px}
+.warn{border-left:4px solid var(--brown);background:rgba(171,125,89,.16);padding:12px;border-radius:10px;margin-bottom:12px;font-size:15px}
+.cnt{color:var(--mut);font-size:13px;margin:2px 6px 0;text-align:right}
+#msg{color:var(--btx);font-size:14px;margin-top:10px;font-weight:600}
+.foot{text-align:center;margin-top:28px}.foot button{margin:6px 0 0}
+.foot #auth{background:none;border:0;box-shadow:none;color:var(--mut);font-size:12px;font-weight:600;opacity:.5;padding:6px 10px;transition:opacity .2s}
+.foot #auth:hover{opacity:.9;filter:none}
+.empty{text-align:center;color:var(--mut);padding:30px 10px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:none}}
+@keyframes shift{to{background-position:100% 50%}}
+@keyframes rise{0%{transform:translateY(0) rotate(0);opacity:0}15%{opacity:.75}100%{transform:translateY(-200px) rotate(260deg);opacity:0}}
+@keyframes sheen{to{background-position:-200% 0}}
+.hero{position:relative;overflow:hidden;background-size:220% 220%;animation:shift 12s ease-in-out infinite alternate}
+.hero h1,.hero p,.hero .petal{position:relative;z-index:1}
+.hero h1{animation:fadeDown .8s both}
+.hero p{animation:fadeUp .8s .2s both}
+.fp{position:absolute;bottom:-24px;opacity:0;color:#fff;pointer-events:none;animation:rise 7s linear infinite}
+main>.card,#q{animation:fadeUp .6s .15s both}
+.pop{animation:fadeUp .5s both}
+.card.row{transition:transform .2s,box-shadow .2s}
+.card.row:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(171,125,89,.22)}
+.card.row[style*="block"]>*{animation:fadeUp .3s both}
+.av{transition:transform .3s}
+.card.row:hover .av{transform:rotate(-8deg) scale(1.08)}
+button{transition:transform .15s,filter .2s}
+button:hover{filter:brightness(1.08)}
+.tag.owner{background:linear-gradient(110deg,#6b4528 30%,#a06f45 50%,#6b4528 70%);background-size:200% 100%;animation:sheen 3s linear infinite}
+@keyframes burst{0%{transform:translate(0,0) scale(.4);opacity:1}100%{transform:translate(var(--dx),var(--dy)) rotate(200deg) scale(1.1);opacity:0}}
+@keyframes glow{0%{box-shadow:0 0 0 0 rgba(245,193,195,.95)}100%{box-shadow:0 0 0 20px rgba(245,193,195,0)}}
+@keyframes tick{0%{transform:scale(1)}40%{transform:scale(1.6) rotate(-12deg)}100%{transform:scale(1)}}
+.yay{animation:glow 1s ease-out}
+.yay input[type=checkbox]{animation:tick .5s}
+.intro.on{color:var(--btx);font-weight:700}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+<header class="hero"><span class="fp" style="left:8%;font-size:16px;animation-delay:0s">✿</span><span class="fp" style="left:26%;font-size:22px;animation-delay:2.2s;animation-duration:8s">✿</span><span class="fp" style="left:48%;font-size:14px;animation-delay:4s">✿</span><span class="fp" style="left:68%;font-size:20px;animation-delay:1.2s;animation-duration:9s">✿</span><span class="fp" style="left:88%;font-size:16px;animation-delay:3.2s">✿</span>
+<div class="petal">✿ ✿ ✿</div><h1>Kawsay</h1><p>Moderación</p></header>
+<div class="card" id="addcard" style="display:none">
+<div class="ct">Agregar rol</div>
+<input id="p" placeholder="Personaje (ej. Rukia)">
+<input id="u" placeholder="ID del usuario" inputmode="numeric">
+<input id="f" placeholder="Fandom (ej. Bleach)">
+<select id="t"></select>
+<button id="add">Agregar</button>
+<div id="msg"></div>
+</div>
+<input id="q" placeholder="🔍 Buscar por personaje, ID, fandom o etiqueta">
+<div class="cnt" id="cnt"></div>
+<div id="list"></div>
+<div class="foot"><div id="seed"></div><button id="auth" class="edit">🔒 Solo para la owner</button></div>
+</main>
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {getFirestore,collection,doc,addDoc,updateDoc,deleteDoc,onSnapshot} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {getAuth,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+const firebaseConfig={apiKey:"AIzaSyAfQgUrcZXDFCafFnbQ2dzNwreqfjvx4k8",authDomain:"kawsay-79f2a.firebaseapp.com",projectId:"kawsay-79f2a",storageBucket:"kawsay-79f2a.firebasestorage.app",messagingSenderId:"652834277960",appId:"1:652834277960:web:339f60fb62cbed8902e67d"};
+const ADMIN="titx81@gmail.com";
+const fapp=initializeApp(firebaseConfig),fdb=getFirestore(fapp),auth=getAuth(fapp);
+const col={doc:id=>({update:d=>updateDoc(doc(fdb,"roles",id),d),delete:()=>deleteDoc(doc(fdb,"roles",id))}),add:d=>addDoc(collection(fdb,"roles"),d)};
+let isAdmin=false,loaded=false;
+const SEED=[{p:"Rukia Kuchiki",u:"1129968719326613564",f:"Bleach",t:"owner",intro:true},{p:"Xeno Houston",u:"1304632254244585513",f:"Dr. Stone",t:"co-owner",intro:true}];
+let items=[];const seen=new Set();let ord=0;const celeb=new Map();
+function burst(el){
+  if(matchMedia("(prefers-reduced-motion:reduce)").matches)return;
+  const r=el.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2,ch=["✿","✨","♡","❀","✿","✨"];
+  for(let k=0;k<12;k++){
+    const s=document.createElement("span"),a=Math.PI*2*k/12+Math.random()*.4,dist=50+Math.random()*50;
+    s.textContent=ch[k%ch.length];
+    s.style.cssText="position:fixed;left:"+x+"px;top:"+y+"px;pointer-events:none;z-index:50;font-size:"+(14+Math.random()*10)+"px;color:"+(k%2?"#F5C1C3":"#AB7D59")+";--dx:"+Math.cos(a)*dist+"px;--dy:"+Math.sin(a)*dist+"px;animation:burst .9s ease-out forwards";
+    document.body.append(s);setTimeout(()=>s.remove(),1000);
+  }
+}
+const TAGS=["miembro","mod","admin","co-owner","owner"];
+function fill(s,v){TAGS.forEach(x=>{const e=document.createElement("option");e.value=x;e.textContent=x;s.append(e)});s.value=v||"miembro"}
+const $=id=>document.getElementById(id);
+const msg=t=>{$("msg").textContent=t};
+function render(){
+  const q=$("q").value.trim().toLowerCase();
+  const res=items.filter(i=>[i.p,i.u,i.f,i.t||"miembro"].join(" ").toLowerCase().includes(q));
+  $("cnt").textContent=res.length+" de "+items.length+" roles";
+  const box=$("list");box.textContent="";
+  const groups={};
+  res.forEach(i=>{const k=i.f.trim().toLowerCase();(groups[k]=groups[k]||{name:i.f.trim(),list:[]}).list.push(i)});
+  if(!res.length){const em=document.createElement("div");em.className="empty";em.textContent=items.length?"No se encontró nada ✿":"Aún no hay roles registrados ✿";box.append(em)}
+  Object.values(groups).sort((a,b)=>a.name.localeCompare(b.name)).forEach(g=>{
+    const h=document.createElement("h2");h.textContent=g.name+" ";
+    const c=document.createElement("small");c.textContent=g.list.length;h.append(c);box.append(h);
+    g.list.forEach(i=>{
+      const d=document.createElement("div");d.className="card row";
+      if(!seen.has(i.id)){seen.add(i.id);d.className+=" pop";d.style.animationDelay=Math.min(ord++,12)*45+"ms"}
+      const ct=celeb.get(i.u.trim());if(ct&&Date.now()-ct<1500)d.className+=" yay";
+      const t=document.createElement("div");
+      const b=document.createElement("b");b.textContent=i.p;
+      {const tg=document.createElement("em");tg.className="tag "+(i.t||"miembro");tg.textContent=i.t||"miembro";b.append(" ",tg)}
+      const s=document.createElement("span");s.className="id";s.textContent="ID: ";
+      const code=document.createElement("code");code.textContent=i.u;s.append(code);
+      const l=document.createElement("label");l.className="intro";
+      const c=document.createElement("input");c.type="checkbox";const same=items.filter(j=>j.u.trim()===i.u.trim());c.checked=same.some(j=>j.intro);
+      c.disabled=!isAdmin;c.onchange=async()=>{if(c.checked){burst(c);celeb.set(i.u.trim(),Date.now())}try{await Promise.all(same.map(j=>col.doc(j.id).update({intro:c.checked})))}catch(e){c.checked=!c.checked;msg("No se pudo actualizar")}};
+      if(c.checked)l.classList.add("on");l.append(c,"Hizo su intro");
+      t.append(b,s,l);
+      const x=document.createElement("button");x.className="del";x.textContent="Eliminar";
+      let timer;
+      x.onclick=async()=>{
+        const grp=items.filter(j=>j.u.trim()===i.u.trim());
+        const anyIntro=grp.some(j=>j.intro);
+        if(anyIntro||grp.length>1){
+          d.textContent="";d.style.display="block";
+          const w=document.createElement("div");w.className="warn";
+          const wb=document.createElement("b");wb.textContent=i.p+" ("+i.f+")";
+          if(grp.length>1){const a=document.createElement("div");a.style.marginBottom="6px";a.append("Este usuario tiene "+grp.length+" roles: ");const bb=document.createElement("b");bb.textContent=grp.map(j=>j.p+" ("+j.f+")").join(", ");a.append(bb,". Se eliminarán todos.");w.append(a)}else w.append(wb);
+          if(anyIntro){const b2=document.createElement("div");b2.textContent="Este usuario realizó su intro, por favor elimina la publicación que hizo antes de borrarlo de la lista";w.append(b2)}
+          const er=document.createElement("div");er.className="err";
+          const ok=document.createElement("button");ok.className="del";ok.textContent=anyIntro?"Ya lo hice":"Eliminar todos";ok.style.marginRight="6px";
+          const no=document.createElement("button");no.className="edit";no.textContent="Cancelar";
+          no.onclick=render;
+          ok.onclick=async()=>{
+            ok.disabled=true;
+            try{await Promise.all(grp.map(j=>col.doc(j.id).delete()));msg("Eliminado ✓")}
+            catch(e){ok.disabled=false;er.textContent="No se pudo eliminar"}
+          };
+          d.append(w,ok,no,er);return;
+        }
+        if(!x.classList.contains("sure")){
+          x.classList.add("sure");x.textContent="¿Seguro?";
+          timer=setTimeout(()=>{x.classList.remove("sure");x.textContent="Eliminar"},3000);
+          return;
+        }
+        clearTimeout(timer);x.disabled=true;x.textContent="...";
+        try{await col.doc(i.id).delete();msg("Eliminado ✓")}
+        catch(e){x.disabled=false;x.classList.remove("sure");x.textContent="Eliminar";msg("No se pudo eliminar: "+(e&&e.message||e))}
+      };
+      const ed=document.createElement("button");ed.className="edit";ed.textContent="Editar";
+      ed.onclick=()=>{
+        d.textContent="";d.style.display="block";
+        const info=document.createElement("div");info.className="id";info.style.marginBottom="8px";info.textContent="ID: "+i.u;
+        const ip=document.createElement("input");ip.value=i.p;ip.placeholder="Personaje";
+        const iff=document.createElement("input");iff.value=i.f;iff.placeholder="Fandom";
+        const sel=document.createElement("select");fill(sel,i.t);
+        const err=document.createElement("div");err.className="err";
+        const ok=document.createElement("button");ok.textContent="Guardar";ok.style.marginRight="6px";
+        const no=document.createElement("button");no.className="edit";no.textContent="Cancelar";
+        no.onclick=render;
+        ok.onclick=async()=>{
+          const p=ip.value.trim(),f=iff.value.trim();
+          if(!p||!f){err.textContent="Llena personaje y fandom";return}
+          const n=s=>s.trim().toLowerCase();
+          const dup=items.find(j=>j.id!==i.id&&n(j.p)===n(p)&&n(j.f)===n(f));
+          if(dup){err.textContent="¡Este rol ya está ocupado! Lo tiene el ID "+dup.u;return}
+          ok.disabled=true;
+          try{await col.doc(i.id).update({p,f,t:sel.value});msg("Rol actualizado ✓")}
+          catch(e){ok.disabled=false;err.textContent="No se pudo guardar"}
+        };
+        d.append(info,ip,iff,sel,ok,no,err);
+      };
+      const bx=document.createElement("div");bx.className="btns";if(isAdmin)bx.append(ed,x);
+      t.className="info";const av=document.createElement("div");av.className="av";av.textContent=(i.p.trim()[0]||"?").toUpperCase();d.append(av,t,bx);box.append(d);
+    });
+  });
+}
+fill($("t"));$("q").oninput=render;
+$("add").onclick=async()=>{
+  const p=$("p").value.trim(),u=$("u").value.trim(),f=$("f").value.trim(),t=$("t").value;
+  if(!p||!u||!f){msg("Llena los tres campos");return}
+  if(!col){msg("Base de datos no disponible");return}
+  const n=s=>s.trim().toLowerCase();
+  const mine=items.filter(i=>i.u.trim()===u);
+  if(mine.length>=2){msg("Este usuario ya tiene 2 roles: "+mine.map(i=>i.p+" ("+i.f+")").join(", "));return}
+  const dup=items.find(i=>n(i.p)===n(p)&&n(i.f)===n(f));
+  if(dup){msg("¡Este rol ya está ocupado! "+dup.p+" ("+dup.f+") lo tiene el ID "+dup.u);alert("¡Este rol ya está ocupado!");return}
+  try{
+    await col.add({p,u,f,t,intro:items.some(j=>j.u.trim()===u&&j.intro)});
+    $("p").value=$("u").value=$("f").value="";$("t").value="miembro";msg("Agregado ✓");
+  }catch(e){msg("No se pudo guardar")}
+};
+function ui(){
+  $("addcard").style.display=isAdmin?"":"none";
+  $("auth").textContent=isAdmin?"Salir":"🔒 Solo para la owner";
+  const sd=$("seed");sd.textContent="";
+  if(isAdmin&&loaded&&!items.length){
+    const b=document.createElement("button");b.textContent="Importar roles anteriores ("+SEED.length+")";
+    b.onclick=async()=>{b.disabled=true;try{for(const r of SEED)await col.add(r)}catch(e){b.disabled=false;alert("No se pudo importar")}};
+    sd.append(b);
+  }
+}
+$("auth").onclick=async()=>{
+  if(isAdmin){await signOut(auth);return}
+  try{await signInWithPopup(auth,new GoogleAuthProvider())}catch(e){alert("No se pudo iniciar sesión")}
+};
+onAuthStateChanged(auth,u=>{
+  isAdmin=!!u&&u.email===ADMIN&&u.emailVerified;
+  if(u&&!isAdmin){alert("Esta cuenta no tiene permisos de edición");signOut(auth)}
+  ui();render();
+});
+onSnapshot(collection(fdb,"roles"),sn=>{
+  items=sn.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.p||"").localeCompare(b.p||""));
+  loaded=true;ui();render();
+},()=>{$("cnt").textContent="Error al cargar la lista"});
+render();ui();
+</script>
+</body>
+</html>
