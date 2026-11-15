@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%8E%A8%3C/text%3E%3C/svg%3E">
+<title>Atelier · Moderación</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,600&family=Nunito:wght@400;600;700;800&family=Bodoni+Moda:wght@600;700&display=swap">
+<style>
+:root{--bg:#0A0A0A;--card:rgba(26,20,15,.78);--cardb:#16110d;--tx:#FFFFFF;--mut:#bfae9f;--bd:rgba(249,174,92,.24);--soft:rgba(228,129,47,.14);--pink:#F9AE5C;--brown:#E4812F;--btx:#F9AE5C;--rd:#ff6b5a;--sh:0 6px 22px rgba(0,0,0,.55);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+::selection{background:var(--pink);color:#0A0A0A}
+body{margin:0;color:var(--tx);font:16px/1.45 'Nunito',system-ui,sans-serif;min-height:100vh;background:radial-gradient(900px 520px at 0% -5%,rgba(228,129,47,.3),transparent 60%),radial-gradient(700px 520px at 100% 0%,rgba(249,174,92,.14),transparent 60%),radial-gradient(700px 600px at 50% 115%,rgba(228,129,47,.2),transparent 60%),var(--bg);background-attachment:fixed}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;background-image:radial-gradient(rgba(249,174,92,.14) 1px,transparent 1px);background-size:22px 22px;opacity:.55}
+main{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:16px 16px 48px}
+.petals{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.pt{position:absolute;top:-30px;color:var(--pink);opacity:.55;animation:fall 14s linear infinite}
+.hero{position:relative;overflow:hidden;text-align:center;padding:34px 16px 28px;margin-bottom:18px;border-radius:32px;border:1px solid rgba(255,255,255,.55);background:linear-gradient(135deg,#F9AE5C 0%,#f09a45 50%,#E4812F 100%);background-size:220% 220%;animation:shift 12s ease-in-out infinite alternate;color:#0A0A0A;box-shadow:0 14px 36px rgba(228,129,47,.4),inset 0 1px 0 rgba(255,255,255,.6)}
+.hero .petal{position:relative;z-index:1;font-size:17px;letter-spacing:14px;color:#fff;opacity:.95}
+h1{position:relative;z-index:1;font:700 50px/1.05 'Bodoni Moda',Georgia,serif;letter-spacing:5px;margin:6px 0 2px;background:linear-gradient(100deg,#0A0A0A 25%,#fff 47%,#0A0A0A 70%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:fadeDown .8s both,shine 6s linear infinite}
+.hero p{position:relative;z-index:1;margin:0;display:flex;justify-content:center;align-items:center;gap:12px;font:italic 600 22px 'Cormorant Garamond',Georgia,serif;letter-spacing:4px;animation:fadeUp .8s .2s both}
+.hero p::before,.hero p::after{content:"";width:38px;height:1px;background:currentColor;opacity:.6}
+.fp{position:absolute;bottom:-24px;opacity:0;color:#fff;pointer-events:none;animation:rise 7s linear infinite}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:16px;animation:fadeUp .6s .1s both}
+.stat{position:relative;overflow:hidden;background:var(--card);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--bd);border-radius:18px;padding:13px 4px 10px;text-align:center;box-shadow:var(--sh)}
+.stat::before{content:"";position:absolute;inset:0 0 auto;height:3px;background:linear-gradient(90deg,var(--pink),var(--brown))}
+.stat b{display:block;font:700 26px/1.1 'Bodoni Moda',Georgia,serif;color:var(--btx)}
+.stat span{font-size:10px;color:var(--mut);font-weight:800;text-transform:uppercase;letter-spacing:.5px}
+.card{background:var(--card);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--bd);border-radius:24px;padding:18px;margin-bottom:14px;box-shadow:var(--sh)}
+main>.card,#q{animation:fadeUp .6s .15s both}
+.ct{font:700 20px 'Bodoni Moda',Georgia,serif;color:var(--btx);margin-bottom:12px}
+input,select{width:100%;box-sizing:border-box;padding:13px 16px;margin-bottom:10px;border:1.5px solid var(--bd);border-radius:16px;background:var(--cardb);color:var(--tx);font:inherit;font-size:16px;transition:border-color .2s,box-shadow .2s}
+input:focus,select:focus{outline:none;border-color:var(--brown);box-shadow:0 0 0 4px rgba(228,129,47,.4)}
+#q{border-radius:999px;padding-left:20px;box-shadow:var(--sh)}
+button{padding:11px 18px;border:0;border-radius:999px;background:linear-gradient(135deg,#F9AE5C,#E4812F);color:#0A0A0A;font:800 15px 'Nunito',system-ui,sans-serif;cursor:pointer;box-shadow:0 4px 12px rgba(228,129,47,.35);transition:transform .15s,filter .2s}
+button:hover{filter:brightness(1.08)}button:active{transform:scale(.96)}
+button:disabled{opacity:.45;cursor:default}
+#add{width:100%;font-size:16px;padding:14px}
+button.del{color:#fff;background:linear-gradient(135deg,#e0645a,#b83a32);box-shadow:0 4px 12px rgba(184,58,50,.3);padding:8px 14px;font-size:13px}
+button.sure{background:#fff;color:var(--rd);border:2px solid var(--rd);box-shadow:none}
+button.edit{background:var(--soft);color:var(--btx);border:1px solid var(--bd);box-shadow:none;padding:8px 14px;font-size:13px;margin-right:6px}
+button.mini{padding:5px 12px;font-size:12px}
+h2{display:flex;align-items:center;gap:10px;font:700 22px 'Bodoni Moda',Georgia,serif;margin:26px 0 12px;color:var(--btx)}
+h2::before{content:"◆";color:var(--brown);font-size:18px}
+h2::after{content:"";flex:1;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--pink),transparent)}
+h2 small{order:1;background:linear-gradient(135deg,var(--pink),#E4812F);color:#0A0A0A;font:800 12px 'Nunito',sans-serif;padding:3px 11px;border-radius:999px}
+.card.row{margin-bottom:11px;padding:14px 16px;border-left:5px solid var(--rc,var(--pink));transition:transform .2s,box-shadow .2s}
+.card.row:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(228,129,47,.3)}
+.r-helper{--rc:#F9AE5C}.r-booster{--rc:#fff}.r-admin{--rc:#FFD08A}.r-founder{--rc:#fff;box-shadow:var(--sh),0 0 0 1px rgba(249,174,92,.55)}
+.row{display:flex;align-items:center;gap:13px}
+.info{flex:1;min-width:0}
+.row b{display:block;font-size:17px}.row span{color:var(--mut);font-size:14px;word-break:break-all}
+.row .id{display:block;margin-top:3px}
+.av{width:50px;height:50px;border-radius:50%;flex:none;display:grid;place-items:center;font:700 22px 'Bodoni Moda',Georgia,serif;background:linear-gradient(135deg,var(--pink),#E4812F);color:#0A0A0A;box-shadow:0 0 0 3px var(--rc,var(--pink)),0 4px 10px rgba(228,129,47,.3);transition:transform .3s}
+.card.row:hover .av{transform:rotate(-8deg) scale(1.08)}
+.btns{display:flex;flex-direction:column;gap:6px}
+code{background:var(--soft);border:1px solid var(--bd);border-radius:8px;padding:2px 7px;font-size:13px;color:var(--btx)}
+.tag{font-style:normal;font-size:10.5px;font-weight:800;letter-spacing:.7px;border-radius:999px;padding:3px 10px;margin-left:6px;vertical-align:middle;text-transform:uppercase;white-space:nowrap}
+.tag::before{display:inline-block;margin-right:3px}
+.tag.miembro{background:var(--soft);color:var(--btx);border:1px solid var(--bd)}
+.tag.helper{background:#F9AE5C;color:#0A0A0A;--gc:rgba(249,174,92,.9);animation:pulse 3.4s ease-in-out infinite}
+.tag.helper::before{content:"◆"}
+.tag.booster{background:linear-gradient(110deg,#d9d9d9 20%,#fff 45%,#d9d9d9 70%);background-size:200% 100%;color:#0A0A0A;--gc:rgba(255,255,255,.75);animation:sheen 3.2s linear infinite,pulse 2.6s ease-in-out infinite}
+.tag.booster::before{content:"✦";animation:twinkle 1.6s ease-in-out infinite}
+.tag.admin{background:linear-gradient(110deg,#E4812F 25%,#FFD08A 50%,#E4812F 75%);background-size:200% 100%;color:#0A0A0A;--gc:rgba(255,208,138,.95);animation:sheen 2.4s linear infinite,pulse 2s ease-in-out infinite}
+.tag.admin::before{content:"❖";animation:twinkle 2s ease-in-out infinite}
+.tag.founder{background:linear-gradient(110deg,#B85A14 20%,#F9AE5C 44%,#fff 50%,#F9AE5C 56%,#B85A14 80%);background-size:200% 100%;color:#0A0A0A;--gc:rgba(249,174,92,1);animation:sheen 2s linear infinite,pulse 1.6s ease-in-out infinite}
+.tag.founder::before{content:"♛";animation:bounce 1.6s ease-in-out infinite}
+input[type=checkbox]{width:20px;height:20px;margin:0 8px 0 0;padding:0;accent-color:var(--brown)}
+.intro{display:flex;align-items:center;margin-top:8px;font-size:14px;color:var(--mut)}
+.intro.on{color:var(--btx);font-weight:700}
+.st{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px}
+.chip{font-style:normal;font-size:12px;font-weight:800;border-radius:999px;padding:3px 11px}
+.chip.w1{background:#fde7b0;color:#6b4a00}.chip.w2{background:#f7b98a;color:#6b2d00}.chip.w3{background:#d9534f;color:#fff}
+.chip.inact{background:var(--soft);color:var(--btx);border:1px solid var(--bd)}
+.mods{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px}
+.mods .intro{margin-top:0;margin-left:4px}
+.expel{margin-top:10px;font-weight:800;color:var(--rd);font-size:14px}
+.card.row.out{filter:grayscale(1);opacity:.7}
+.dtl{display:block;font-size:13px;color:var(--mut);margin:-2px 0 6px}
+.err{color:var(--rd);font-size:14px;margin-top:8px}
+.warn{border-left:4px solid var(--brown);background:rgba(228,129,47,.16);padding:12px;border-radius:12px;margin-bottom:12px;font-size:15px}
+.cnt{color:var(--mut);font-size:13px;margin:2px 8px 0;text-align:right}
+.empty{text-align:center;color:var(--mut);padding:36px 10px;font:italic 600 20px 'Cormorant Garamond',Georgia,serif}
+.foot{text-align:center;margin-top:30px}
+.foot::before{content:"✦ ✦ ✦";display:block;color:var(--pink);letter-spacing:12px;margin-bottom:6px}
+.foot button{margin:6px 0 0}
+.foot #auth{background:none;border:0;box-shadow:none;color:var(--mut);font-size:12px;font-weight:700;opacity:.5;padding:6px 10px}
+.foot #auth:hover{opacity:.9;filter:none}
+.toast{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom,0px));transform:translate(-50%,30px);background:linear-gradient(135deg,#E4812F,#F9AE5C);color:#0A0A0A;padding:12px 22px;border-radius:999px;font-weight:700;font-size:14px;box-shadow:0 10px 30px rgba(0,0,0,.28);opacity:0;pointer-events:none;transition:opacity .35s,transform .35s;z-index:60;max-width:88%;text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.pop{animation:fadeUp .5s both}
+.card.row[style*="block"]>*{animation:fadeUp .3s both}
+.yay{animation:glow 1s ease-out}.yay input[type=checkbox]{animation:tick .5s}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:none}}
+@keyframes shift{to{background-position:100% 50%}}
+@keyframes shine{to{background-position:-220% 0}}
+@keyframes rise{0%{transform:translateY(0) rotate(0);opacity:0}15%{opacity:.8}100%{transform:translateY(-210px) rotate(260deg);opacity:0}}
+@keyframes fall{0%{transform:translate(0,-30px) rotate(0)}50%{transform:translate(34px,55vh) rotate(180deg)}100%{transform:translate(-12px,110vh) rotate(360deg)}}
+@keyframes sheen{to{background-position:-200% 0}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 transparent}50%{box-shadow:0 0 12px 2px var(--gc)}}
+@keyframes twinkle{0%,100%{transform:scale(1) rotate(0);opacity:1}50%{transform:scale(1.5) rotate(20deg);opacity:.6}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px) rotate(-10deg)}}
+@keyframes burst{0%{transform:translate(0,0) scale(.4);opacity:1}100%{transform:translate(var(--dx),var(--dy)) rotate(200deg) scale(1.1);opacity:0}}
+@keyframes glow{0%{box-shadow:0 0 0 0 rgba(249,174,92,.9)}100%{box-shadow:0 0 0 20px rgba(249,174,92,0)}}
+@keyframes tick{0%{transform:scale(1)}40%{transform:scale(1.6) rotate(-12deg)}100%{transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="petals"><span class="pt" style="left:6%;font-size:16px;animation-delay:-0s;animation-duration:15s">✦</span><span class="pt" style="left:20%;font-size:22px;animation-delay:-6s;animation-duration:19s">✦</span><span class="pt" style="left:36%;font-size:14px;animation-delay:-3s;animation-duration:16s">✦</span><span class="pt" style="left:52%;font-size:20px;animation-delay:-9s;animation-duration:21s">✦</span><span class="pt" style="left:66%;font-size:16px;animation-delay:-12s;animation-duration:17s">✦</span><span class="pt" style="left:80%;font-size:24px;animation-delay:-2s;animation-duration:20s">✦</span><span class="pt" style="left:92%;font-size:14px;animation-delay:-8s;animation-duration:15s">✦</span></div>
+<main>
+<header class="hero"><span class="fp" style="left:8%;font-size:16px;animation-delay:0s">✦</span><span class="fp" style="left:26%;font-size:22px;animation-delay:2.2s;animation-duration:8s">✦</span><span class="fp" style="left:48%;font-size:14px;animation-delay:4s">✦</span><span class="fp" style="left:68%;font-size:20px;animation-delay:1.2s;animation-duration:9s">✦</span><span class="fp" style="left:88%;font-size:16px;animation-delay:3.2s">✦</span>
+<div class="petal">✦ ✦ ✦</div><h1>Atelier</h1><p>Moderación</p></header>
+<div class="stats"><div class="stat"><b id="s1">0</b><span>Roles</span></div><div class="stat"><b id="s2">0</b><span>Con intro</span></div><div class="stat"><b id="s3">0</b><span>Sin intro</span></div><div class="stat"><b id="s4">0</b><span>Con warn</span></div></div>
+<div class="card" id="addcard" style="display:none">
+<div class="ct">Agregar rol</div>
+<input id="p" placeholder="Personaje (ej. Rukia)">
+<input id="u" placeholder="ID del usuario" inputmode="numeric">
+<input id="f" placeholder="Fandom (ej. Bleach)">
+<select id="t"></select>
+<div class="dtl">Fecha de ingreso</div>
+<input id="fi" type="date">
+<label class="intro"><input type="checkbox" id="bz">💎 Booster del server</label>
+<button id="add">Agregar</button>
+<div id="msg"></div>
+</div>
+<input id="q" placeholder="🔍 Buscar por personaje, ID, fandom o etiqueta">
+<div class="cnt" id="cnt"></div>
+<div id="list"></div>
+<div class="foot"><div id="seed"></div><button id="auth" class="edit">🔒 Solo para Rukia</button></div>
+</main>
+<div class="toast" id="toast"></div>
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {getFirestore,collection,doc,addDoc,updateDoc,deleteDoc,onSnapshot} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {getAuth,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+const firebaseConfig={apiKey:"AIzaSyAfQgUrcZXDFCafFnbQ2dzNwreqfjvx4k8",authDomain:"kawsay-79f2a.firebaseapp.com",projectId:"kawsay-79f2a",storageBucket:"kawsay-79f2a.firebasestorage.app",messagingSenderId:"652834277960",appId:"1:652834277960:web:339f60fb62cbed8902e67d"};
+const ADMIN="titx81@gmail.com";
+const fapp=initializeApp(firebaseConfig),fdb=getFirestore(fapp),auth=getAuth(fapp);
+const col={doc:id=>({update:d=>updateDoc(doc(fdb,"atelier_roles",id),d),delete:()=>deleteDoc(doc(fdb,"atelier_roles",id))}),add:d=>addDoc(collection(fdb,"atelier_roles"),d)};
+let isAdmin=false,loaded=false;
+const SEED=[];
+let items=[];const seen=new Set();let ord=0;const celeb=new Map();
+function burst(el){
+  if(matchMedia("(prefers-reduced-motion:reduce)").matches)return;
+  const r=el.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2,ch=["✦","✨","♡","◆","✦","✨"];
+  for(let k=0;k<12;k++){
+    const s=document.createElement("span"),a=Math.PI*2*k/12+Math.random()*.4,dist=50+Math.random()*50;
+    s.textContent=ch[k%ch.length];
+    s.style.cssText="position:fixed;left:"+x+"px;top:"+y+"px;pointer-events:none;z-index:50;font-size:"+(14+Math.random()*10)+"px;color:"+(k%2?"#F9AE5C":"#E4812F")+";--dx:"+Math.cos(a)*dist+"px;--dy:"+Math.sin(a)*dist+"px;animation:burst .9s ease-out forwards";
+    document.body.append(s);setTimeout(()=>s.remove(),1000);
+  }
+}
+const TAGS=["miembro","helper","admin","founder"];
+function fill(s,v){TAGS.forEach(x=>{const e=document.createElement("option");e.value=x;e.textContent=x;s.append(e)});s.value=v||"miembro"}
+const $=id=>document.getElementById(id);
+let tt;const msg=t=>{const el=$("toast");el.textContent=t;el.classList.add("show");clearTimeout(tt);tt=setTimeout(()=>el.classList.remove("show"),3500)};
+const MES=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+function fmt(x){const [y,m,d]=x.split("-");return +d+" "+MES[+m-1]+" "+y}
+function today(){const x=new Date();return x.getFullYear()+"-"+String(x.getMonth()+1).padStart(2,"0")+"-"+String(x.getDate()).padStart(2,"0")}
+function animNum(el,to){
+  const from=el._v||0;el._v=to;
+  if(from===to){el.textContent=to;return}
+  const t0=performance.now();
+  (function stp(t){const k=Math.min(1,(t-t0)/500);el.textContent=Math.round(from+(to-from)*k);if(k<1)requestAnimationFrame(stp)})(t0);
+}
+function stats(){
+  const byU={};items.forEach(i=>{const k=i.u.trim();(byU[k]=byU[k]||[]).push(i)});
+  const conIntro=items.filter(i=>byU[i.u.trim()].some(j=>j.intro)).length;
+  animNum($("s1"),items.length);animNum($("s2"),conIntro);animNum($("s3"),items.length-conIntro);
+  animNum($("s4"),Object.values(byU).filter(g=>Math.max(...g.map(j=>j.w||0))>0).length);
+}
+function render(){
+  stats();
+  const q=$("q").value.trim().toLowerCase();
+  const res=items.filter(i=>[i.p,i.u,i.f,i.t||"miembro"].join(" ").toLowerCase().includes(q));
+  $("cnt").textContent=res.length+" de "+items.length+" roles";
+  const box=$("list");box.textContent="";
+  const groups={};
+  res.forEach(i=>{const k=i.f.trim().toLowerCase();(groups[k]=groups[k]||{name:i.f.trim(),list:[]}).list.push(i)});
+  if(!res.length){const em=document.createElement("div");em.className="empty";em.textContent=items.length?"No se encontró nada ✦":"Aún no hay roles registrados ✦";box.append(em)}
+  Object.values(groups).sort((a,b)=>a.name.localeCompare(b.name)).forEach(g=>{
+    const h=document.createElement("h2");h.textContent=g.name+" ";
+    const c=document.createElement("small");c.textContent=g.list.length;h.append(c);box.append(h);
+    g.list.forEach(i=>{
+      const d=document.createElement("div");d.className="card row r-"+(i.t||"miembro");
+      if(!seen.has(i.id)){seen.add(i.id);d.className+=" pop";d.style.animationDelay=Math.min(ord++,12)*45+"ms"}
+      const ct=celeb.get(i.u.trim());if(ct&&Date.now()-ct<1500)d.className+=" yay";
+      const t=document.createElement("div");
+      const b=document.createElement("b");b.textContent=i.p;
+      {const tg=document.createElement("em");tg.className="tag "+(i.t||"miembro");tg.textContent=i.t||"miembro";b.append(" ",tg)}
+      const s=document.createElement("span");s.className="id";s.textContent="ID: ";
+      const code=document.createElement("code");code.textContent=i.u;s.append(code);
+      const l=document.createElement("label");l.className="intro";
+      const c=document.createElement("input");c.type="checkbox";const same=items.filter(j=>j.u.trim()===i.u.trim());c.checked=same.some(j=>j.intro);
+      c.disabled=!isAdmin;c.onchange=async()=>{if(c.checked){burst(c);celeb.set(i.u.trim(),Date.now())}try{await Promise.all(same.map(j=>col.doc(j.id).update({intro:c.checked})))}catch(e){c.checked=!c.checked;msg("No se pudo actualizar")}};
+      if(c.checked)l.classList.add("on");l.append(c,"Hizo su intro");
+      const fd=document.createElement("span");fd.className="id";if(i.fi)fd.textContent="Ingreso: "+fmt(i.fi);
+      const bo=same.some(j=>j.bz);
+      if(bo){const bt=document.createElement("em");bt.className="tag booster";bt.textContent="booster";b.append(" ",bt)}
+      t.append(b,s);if(i.fi)t.append(fd);t.append(l);
+      const wn=Math.max(0,...same.map(j=>j.w||0)),ia=same.some(j=>j.inact);
+      const setU=async data=>{try{await Promise.all(same.map(j=>col.doc(j.id).update(data)))}catch(e){msg("No se pudo actualizar")}};
+      const st=document.createElement("div");st.className="st";
+      if(wn>0){const e=document.createElement("em");e.className="chip w"+wn;e.textContent="⚠ "+wn+(wn===1?" warn":" warns");st.append(e)}
+      if(ia){const e=document.createElement("em");e.className="chip inact";e.textContent="💤 Inactividad";st.append(e)}
+      if(st.childNodes.length)t.append(st);
+      if(isAdmin){
+        const md=document.createElement("div");md.className="mods";
+        const mn=document.createElement("button");mn.className="edit mini";mn.textContent="− warn";mn.disabled=wn<=0;mn.onclick=()=>setU({w:wn-1});
+        const pl=document.createElement("button");pl.className="edit mini";pl.textContent="+ warn";pl.disabled=wn>=3;pl.onclick=()=>setU({w:wn+1});
+        const il=document.createElement("label");il.className="intro"+(ia?" on":"");
+        const ic=document.createElement("input");ic.type="checkbox";ic.checked=ia;ic.onchange=()=>setU({inact:ic.checked});
+        il.append(ic,"Inactividad");
+        const bl=document.createElement("label");bl.className="intro"+(bo?" on":"");
+        const bc=document.createElement("input");bc.type="checkbox";bc.checked=bo;bc.onchange=()=>setU({bz:bc.checked});
+        bl.append(bc,"Booster");md.append(mn,pl,il,bl);t.append(md);
+      }
+      if(wn>=3){d.classList.add("out");const ex=document.createElement("div");ex.className="expel";ex.textContent="🚫 Este usuario será expulsado";t.append(ex)}
+      const x=document.createElement("button");x.className="del";x.textContent="Eliminar";
+      let timer;
+      x.onclick=async()=>{
+        const grp=items.filter(j=>j.u.trim()===i.u.trim());
+        const anyIntro=grp.some(j=>j.intro);
+        if(anyIntro||grp.length>1){
+          d.textContent="";d.style.display="block";
+          const w=document.createElement("div");w.className="warn";
+          const wb=document.createElement("b");wb.textContent=i.p+" ("+i.f+")";
+          if(grp.length>1){const a=document.createElement("div");a.style.marginBottom="6px";a.append("Este usuario tiene "+grp.length+" roles: ");const bb=document.createElement("b");bb.textContent=grp.map(j=>j.p+" ("+j.f+")").join(", ");a.append(bb,". Se eliminarán todos.");w.append(a)}else w.append(wb);
+          if(anyIntro){const b2=document.createElement("div");b2.textContent="Este usuario realizó su intro, por favor elimina la publicación que hizo antes de borrarlo de la lista";w.append(b2)}
+          const er=document.createElement("div");er.className="err";
+          const ok=document.createElement("button");ok.className="del";ok.textContent=anyIntro?"Ya lo hice":"Eliminar todos";ok.style.marginRight="6px";
+          const no=document.createElement("button");no.className="edit";no.textContent="Cancelar";
+          no.onclick=render;
+          ok.onclick=async()=>{
+            ok.disabled=true;
+            try{await Promise.all(grp.map(j=>col.doc(j.id).delete()));msg("Eliminado ✓")}
+            catch(e){ok.disabled=false;er.textContent="No se pudo eliminar"}
+          };
+          d.append(w,ok,no,er);return;
+        }
+        if(!x.classList.contains("sure")){
+          x.classList.add("sure");x.textContent="¿Seguro?";
+          timer=setTimeout(()=>{x.classList.remove("sure");x.textContent="Eliminar"},3000);
+          return;
+        }
+        clearTimeout(timer);x.disabled=true;x.textContent="...";
+        try{await col.doc(i.id).delete();msg("Eliminado ✓")}
+        catch(e){x.disabled=false;x.classList.remove("sure");x.textContent="Eliminar";msg("No se pudo eliminar: "+(e&&e.message||e))}
+      };
+      const ed=document.createElement("button");ed.className="edit";ed.textContent="Editar";
+      ed.onclick=()=>{
+        d.textContent="";d.style.display="block";
+        const info=document.createElement("div");info.className="id";info.style.marginBottom="8px";info.textContent="ID: "+i.u;
+        const ip=document.createElement("input");ip.value=i.p;ip.placeholder="Personaje";
+        const iff=document.createElement("input");iff.value=i.f;iff.placeholder="Fandom";
+        const sel=document.createElement("select");fill(sel,i.t);
+        const dl=document.createElement("div");dl.className="dtl";dl.textContent="Fecha de ingreso";
+        const dt=document.createElement("input");dt.type="date";dt.value=i.fi||"";
+        const err=document.createElement("div");err.className="err";
+        const ok=document.createElement("button");ok.textContent="Guardar";ok.style.marginRight="6px";
+        const no=document.createElement("button");no.className="edit";no.textContent="Cancelar";
+        no.onclick=render;
+        ok.onclick=async()=>{
+          const p=ip.value.trim(),f=iff.value.trim();
+          if(!p||!f){err.textContent="Llena personaje y fandom";return}
+          const n=s=>s.trim().toLowerCase();
+          const dup=items.find(j=>j.id!==i.id&&n(j.p)===n(p)&&n(j.f)===n(f));
+          if(dup){err.textContent="¡Este rol ya está ocupado! Lo tiene el ID "+dup.u;return}
+          ok.disabled=true;
+          try{await col.doc(i.id).update({p,f,t:sel.value,fi:dt.value});msg("Rol actualizado ✓")}
+          catch(e){ok.disabled=false;err.textContent="No se pudo guardar"}
+        };
+        d.append(info,ip,iff,sel,dl,dt,ok,no,err);
+      };
+      const bx=document.createElement("div");bx.className="btns";if(isAdmin)bx.append(ed,x);
+      t.className="info";const av=document.createElement("div");av.className="av";av.textContent=(i.p.trim()[0]||"?").toUpperCase();d.append(av,t,bx);box.append(d);
+    });
+  });
+}
+fill($("t"));$("fi").value=today();$("q").oninput=render;
+$("add").onclick=async()=>{
+  const p=$("p").value.trim(),u=$("u").value.trim(),f=$("f").value.trim(),t=$("t").value,fi=$("fi").value||today();
+  if(!p||!u||!f){msg("Llena los tres campos");return}
+  if(!col){msg("Base de datos no disponible");return}
+  const n=s=>s.trim().toLowerCase();
+  const mine=items.filter(i=>i.u.trim()===u);
+  if(mine.length>=2){msg("Este usuario ya tiene 2 roles: "+mine.map(i=>i.p+" ("+i.f+")").join(", "));return}
+  const dup=items.find(i=>n(i.p)===n(p)&&n(i.f)===n(f));
+  if(dup){msg("¡Este rol ya está ocupado! "+dup.p+" ("+dup.f+") lo tiene el ID "+dup.u);return}
+  try{
+    const bzv=$("bz").checked||mine.some(j=>j.bz);
+    await col.add({p,u,f,t,fi,bz:bzv,intro:items.some(j=>j.u.trim()===u&&j.intro),w:Math.max(0,...mine.map(j=>j.w||0)),inact:mine.some(j=>j.inact)});
+    if(bzv)await Promise.all(mine.filter(j=>!j.bz).map(j=>col.doc(j.id).update({bz:true})));
+    $("p").value=$("u").value=$("f").value="";$("t").value="miembro";$("fi").value=today();$("bz").checked=false;msg("Agregado ✓");
+  }catch(e){msg("No se pudo guardar")}
+};
+function ui(){
+  $("addcard").style.display=isAdmin?"":"none";
+  $("auth").textContent=isAdmin?"Salir":"🔒 Solo para Rukia";
+  const sd=$("seed");sd.textContent="";
+  if(isAdmin&&loaded&&SEED.length&&!items.length){
+    const b=document.createElement("button");b.textContent="Importar roles anteriores ("+SEED.length+")";
+    b.onclick=async()=>{b.disabled=true;try{for(const r of SEED)await col.add(r)}catch(e){b.disabled=false;alert("No se pudo importar")}};
+    sd.append(b);
+  }
+}
+$("auth").onclick=async()=>{
+  if(isAdmin){await signOut(auth);return}
+  try{await signInWithPopup(auth,new GoogleAuthProvider())}catch(e){alert("No se pudo iniciar sesión")}
+};
+onAuthStateChanged(auth,u=>{
+  isAdmin=!!u&&u.email===ADMIN&&u.emailVerified;
+  if(u&&!u.isAnonymous&&!isAdmin){alert("Esta cuenta no tiene permisos de edición");signOut(auth)}
+  ui();render();
+});
+onSnapshot(collection(fdb,"atelier_roles"),sn=>{
+  items=sn.docs.map(d=>{const x={id:d.id,...d.data()};x.t=({owner:"founder","co-owner":"admin",mod:"helper"})[x.t]||x.t;return x}).sort((a,b)=>(a.p||"").localeCompare(b.p||""));
+  loaded=true;ui();render();
+},()=>{$("cnt").textContent="Error al cargar la lista"});
+render();ui();
+</script>
+</body>
+</html>
