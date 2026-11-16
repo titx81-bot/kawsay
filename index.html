@@ -110,6 +110,9 @@ input[type=checkbox]{width:20px;height:20px;margin:0 8px 0 0;padding:0;accent-co
 @keyframes glow{0%{box-shadow:0 0 0 0 rgba(245,193,195,.95)}100%{box-shadow:0 0 0 20px rgba(245,193,195,0)}}
 @keyframes tick{0%{transform:scale(1)}40%{transform:scale(1.6) rotate(-12deg)}100%{transform:scale(1)}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+.segs{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px;animation:fadeUp .6s .2s both}
+.seg{background:var(--soft);color:var(--btx);border:1px solid var(--bd);box-shadow:none;padding:8px 15px;font-size:13px}
+.seg.on{background:linear-gradient(135deg,#C99770,#9a6b47);color:#fff;border-color:transparent;box-shadow:0 4px 12px rgba(154,107,71,.35)}
 </style>
 </head>
 <body>
@@ -126,11 +129,13 @@ input[type=checkbox]{width:20px;height:20px;margin:0 8px 0 0;padding:0;accent-co
 <select id="t"></select>
 <div class="dtl">Fecha de ingreso</div>
 <input id="fi" type="date">
+<label class="intro"><input type="checkbox" id="ih">✓ Ya hizo su intro</label>
 <label class="intro"><input type="checkbox" id="bz">💎 Booster del server</label>
 <button id="add">Agregar</button>
 <div id="msg"></div>
 </div>
 <input id="q" placeholder="🔍 Buscar por personaje, ID, fandom o etiqueta">
+<div class="segs"><button type="button" class="seg on" data-v="">Todos</button><button type="button" class="seg" data-v="intro">✓ Con intro</button><button type="button" class="seg" data-v="nointro">✗ Sin intro</button><button type="button" class="seg" data-v="bz">💎 Boosters</button><button type="button" class="seg" data-v="inact">💤 Inactivos</button><button type="button" class="seg" data-v="warn">⚠ Con warns</button></div>
 <div class="cnt" id="cnt"></div>
 <div id="list"></div>
 <div class="foot"><div id="seed"></div><button id="auth" class="edit">🔒 Solo para la owner</button></div>
@@ -179,7 +184,9 @@ function stats(){
 function render(){
   stats();
   const q=$("q").value.trim().toLowerCase();
-  const res=items.filter(i=>[i.p,i.u,i.f,i.t||"miembro"].join(" ").toLowerCase().includes(q));
+  const grp=i=>items.filter(j=>j.u.trim()===i.u.trim());
+  const test={intro:g=>g.some(j=>j.intro),nointro:g=>!g.some(j=>j.intro),bz:g=>g.some(j=>j.bz),inact:g=>g.some(j=>j.inact),warn:g=>g.some(j=>(j.w||0)>0)};
+  const res=items.filter(i=>[i.p,i.u,i.f,i.t||"miembro"].join(" ").toLowerCase().includes(q)&&[...fset].every(k=>test[k](grp(i))));
   $("cnt").textContent=res.length+" de "+items.length+" roles";
   const box=$("list");box.textContent="";
   const groups={};
@@ -223,19 +230,19 @@ function render(){
         bl.append(bc,"Booster");md.append(mn,pl,il,bl);t.append(md);
       }
       if(wn>=3){d.classList.add("out");const ex=document.createElement("div");ex.className="expel";ex.textContent="🚫 Este usuario será expulsado";t.append(ex)}
-      const x=document.createElement("button");x.className="del";x.textContent="Eliminar";
+      const x=document.createElement("button");x.className="del";x.textContent="Eliminar usuario";
       let timer;
       x.onclick=async()=>{
         const grp=items.filter(j=>j.u.trim()===i.u.trim());
         const anyIntro=grp.some(j=>j.intro);
-        if(anyIntro||grp.length>1){
+        {
           d.textContent="";d.style.display="block";
           const w=document.createElement("div");w.className="warn";
           const wb=document.createElement("b");wb.textContent=i.p+" ("+i.f+")";
-          if(grp.length>1){const a=document.createElement("div");a.style.marginBottom="6px";a.append("Este usuario tiene "+grp.length+" roles: ");const bb=document.createElement("b");bb.textContent=grp.map(j=>j.p+" ("+j.f+")").join(", ");a.append(bb,". Se eliminarán todos.");w.append(a)}else w.append(wb);
+          if(grp.length>1){const a=document.createElement("div");a.style.marginBottom="6px";a.append("Este usuario tiene "+grp.length+" roles: ");const bb=document.createElement("b");bb.textContent=grp.map(j=>j.p+" ("+j.f+")").join(", ");a.append(bb,". Se eliminarán todos.");w.append(a)}else{const a1=document.createElement("div");a1.append(wb," · se eliminará este usuario.");w.append(a1)}
           if(anyIntro){const b2=document.createElement("div");b2.textContent="Este usuario realizó su intro, por favor elimina la publicación que hizo antes de borrarlo de la lista";w.append(b2)}
           const er=document.createElement("div");er.className="err";
-          const ok=document.createElement("button");ok.className="del";ok.textContent=anyIntro?"Ya lo hice":"Eliminar todos";ok.style.marginRight="6px";
+          const ok=document.createElement("button");ok.className="del";ok.textContent=anyIntro?"Ya lo hice":(grp.length>1?"Eliminar todos":"Eliminar usuario");ok.style.marginRight="6px";
           const no=document.createElement("button");no.className="edit";no.textContent="Cancelar";
           no.onclick=render;
           ok.onclick=async()=>{
@@ -279,12 +286,24 @@ function render(){
         };
         d.append(info,ip,iff,sel,dl,dt,ok,no,err);
       };
-      const bx=document.createElement("div");bx.className="btns";if(isAdmin)bx.append(ed,x);
+      const bx=document.createElement("div");bx.className="btns";const xr=document.createElement("button");xr.className="del";xr.textContent="Eliminar rol";
+      xr.onclick=async()=>{xr.disabled=true;try{await col.doc(i.id).delete()}catch(e){xr.disabled=false;msg("No se pudo eliminar")}};
+      if(isAdmin)bx.append(ed,xr,x);
       t.className="info";const av=document.createElement("div");av.className="av";av.textContent=(i.p.trim()[0]||"?").toUpperCase();d.append(av,t,bx);box.append(d);
     });
   });
 }
+const fset=new Set();
 fill($("t"));$("fi").value=today();$("q").oninput=render;
+const segs=[...document.querySelectorAll(".seg")];
+segs.forEach(b=>b.onclick=()=>{
+  const v=b.dataset.v;
+  if(v==="")fset.clear();
+  else if(fset.has(v))fset.delete(v);
+  else{fset.add(v);if(v==="intro")fset.delete("nointro");if(v==="nointro")fset.delete("intro")}
+  segs.forEach(x=>x.classList.toggle("on",x.dataset.v===""?fset.size===0:fset.has(x.dataset.v)));
+  render();
+});
 $("add").onclick=async()=>{
   const p=$("p").value.trim(),u=$("u").value.trim(),f=$("f").value.trim(),t=$("t").value,fi=$("fi").value||today();
   if(!p||!u||!f){msg("Llena los tres campos");return}
@@ -295,10 +314,11 @@ $("add").onclick=async()=>{
   const dup=items.find(i=>n(i.p)===n(p)&&n(i.f)===n(f));
   if(dup){msg("¡Este rol ya está ocupado! "+dup.p+" ("+dup.f+") lo tiene el ID "+dup.u);return}
   try{
-    const bzv=$("bz").checked||mine.some(j=>j.bz);
-    await col.add({p,u,f,t,fi,bz:bzv,intro:items.some(j=>j.u.trim()===u&&j.intro),w:Math.max(0,...mine.map(j=>j.w||0)),inact:mine.some(j=>j.inact)});
+    const bzv=$("bz").checked||mine.some(j=>j.bz),iv=$("ih").checked||mine.some(j=>j.intro);
+    await col.add({p,u,f,t,fi,bz:bzv,intro:iv,w:Math.max(0,...mine.map(j=>j.w||0)),inact:mine.some(j=>j.inact)});
     if(bzv)await Promise.all(mine.filter(j=>!j.bz).map(j=>col.doc(j.id).update({bz:true})));
-    $("p").value=$("u").value=$("f").value="";$("t").value="miembro";$("fi").value=today();$("bz").checked=false;msg("Agregado ✓");
+    if(iv)await Promise.all(mine.filter(j=>!j.intro).map(j=>col.doc(j.id).update({intro:true})));
+    $("p").value=$("u").value=$("f").value="";$("t").value="miembro";$("fi").value=today();$("bz").checked=false;$("ih").checked=false;msg("Agregado ✓");
   }catch(e){msg("No se pudo guardar")}
 };
 function ui(){
@@ -317,7 +337,7 @@ $("auth").onclick=async()=>{
 };
 onAuthStateChanged(auth,u=>{
   isAdmin=!!u&&u.email===ADMIN&&u.emailVerified;
-  if(u&&!isAdmin){alert("Esta cuenta no tiene permisos de edición");signOut(auth)}
+  if(u&&!u.isAnonymous&&!isAdmin){alert("Esta cuenta no tiene permisos de edición");signOut(auth)}
   ui();render();
 });
 onSnapshot(collection(fdb,"roles"),sn=>{
