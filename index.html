@@ -22,6 +22,9 @@ main{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:16px 16px
 h1{position:relative;z-index:1;font:700 50px/1.05 'Playfair Display',Georgia,serif;letter-spacing:5px;margin:6px 0 2px;background:linear-gradient(100deg,#3a2415 25%,#fff 47%,#3a2415 70%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:fadeDown .8s both,shine 6s linear infinite}
 .hero p{position:relative;z-index:1;margin:0;display:flex;justify-content:center;align-items:center;gap:12px;font:italic 600 22px 'Cormorant Garamond',Georgia,serif;letter-spacing:4px;animation:fadeUp .8s .2s both}
 .hero p::before,.hero p::after{content:"";width:38px;height:1px;background:currentColor;opacity:.6}
+.by{position:relative;z-index:1;margin-top:14px;font:700 14px 'Nunito',system-ui,sans-serif;letter-spacing:1px;animation:fadeUp .8s .35s both}
+.by a{color:inherit;text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1.5px}
+.by a:hover{color:#fff}
 .fp{position:absolute;bottom:-24px;opacity:0;color:#fff;pointer-events:none;animation:rise 7s linear infinite}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:16px;animation:fadeUp .6s .1s both}
 .stat{position:relative;overflow:hidden;background:var(--card);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--bd);border-radius:18px;padding:13px 4px 10px;text-align:center;box-shadow:var(--sh)}
@@ -119,7 +122,7 @@ input[type=checkbox]{width:20px;height:20px;margin:0 8px 0 0;padding:0;accent-co
 <div class="petals"><span class="pt" style="left:6%;font-size:16px;animation-delay:-0s;animation-duration:15s">✿</span><span class="pt" style="left:20%;font-size:22px;animation-delay:-6s;animation-duration:19s">✿</span><span class="pt" style="left:36%;font-size:14px;animation-delay:-3s;animation-duration:16s">✿</span><span class="pt" style="left:52%;font-size:20px;animation-delay:-9s;animation-duration:21s">✿</span><span class="pt" style="left:66%;font-size:16px;animation-delay:-12s;animation-duration:17s">✿</span><span class="pt" style="left:80%;font-size:24px;animation-delay:-2s;animation-duration:20s">✿</span><span class="pt" style="left:92%;font-size:14px;animation-delay:-8s;animation-duration:15s">✿</span></div>
 <main>
 <header class="hero"><span class="fp" style="left:8%;font-size:16px;animation-delay:0s">✿</span><span class="fp" style="left:26%;font-size:22px;animation-delay:2.2s;animation-duration:8s">✿</span><span class="fp" style="left:48%;font-size:14px;animation-delay:4s">✿</span><span class="fp" style="left:68%;font-size:20px;animation-delay:1.2s;animation-duration:9s">✿</span><span class="fp" style="left:88%;font-size:16px;animation-delay:3.2s">✿</span>
-<div class="petal">✿ ✿ ✿</div><h1>Kawsay</h1><p>Moderación</p></header>
+<div class="petal">✿ ✿ ✿</div><h1>Kawsay</h1><p>Moderación</p><div class="by">hecho por: <a href="https://discord.com/users/1129968719326613564" target="_blank" rel="noopener noreferrer">Rukia Kuchiki</a></div></header>
 <div class="stats"><div class="stat"><b id="s1">0</b><span>Roles</span></div><div class="stat"><b id="s2">0</b><span>Con intro</span></div><div class="stat"><b id="s3">0</b><span>Sin intro</span></div><div class="stat"><b id="s4">0</b><span>Con warn</span></div></div>
 <div class="card" id="addcard" style="display:none">
 <div class="ct">Agregar rol</div>
@@ -143,7 +146,7 @@ input[type=checkbox]{width:20px;height:20px;margin:0 8px 0 0;padding:0;accent-co
 <div class="toast" id="toast"></div>
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {getFirestore,collection,doc,addDoc,updateDoc,deleteDoc,onSnapshot} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {getFirestore,collection,doc,addDoc,updateDoc,deleteDoc,onSnapshot,writeBatch} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import {getAuth,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 const firebaseConfig={apiKey:"AIzaSyAfQgUrcZXDFCafFnbQ2dzNwreqfjvx4k8",authDomain:"kawsay-79f2a.firebaseapp.com",projectId:"kawsay-79f2a",storageBucket:"kawsay-79f2a.firebasestorage.app",messagingSenderId:"652834277960",appId:"1:652834277960:web:339f60fb62cbed8902e67d"};
 const ADMIN="titx81@gmail.com";
@@ -163,6 +166,19 @@ function burst(el){
   }
 }
 const TAGS=["miembro","mod","admin","co-owner","owner"];
+function tagOf(i){const k=i.u.trim();let m=0;items.forEach(j=>{if(j.u.trim()===k){const x=TAGS.indexOf(j.t||"miembro");if(x>m)m=x}});return TAGS[m]}
+const healing=new Set();
+function heal(){
+  if(!isAdmin||!loaded)return;
+  const g={};items.forEach(i=>{const k=i.u.trim();(g[k]=g[k]||[]).push(i)});
+  const bt=writeBatch(fdb),keys=[];
+  Object.values(g).forEach(list=>{
+    if(list.length<2)return;
+    const top=tagOf(list[0]);
+    list.forEach(j=>{const key=j.id+":"+top;if((j.t||"miembro")!==top&&!healing.has(key)){healing.add(key);keys.push(key);bt.update(doc(fdb,"roles",j.id),{t:top})}});
+  });
+  if(keys.length)bt.commit().then(()=>{keys.forEach(k=>healing.delete(k));msg("Etiquetas sincronizadas por ID ✓")}).catch(()=>keys.forEach(k=>healing.delete(k)));
+}
 function fill(s,v){TAGS.forEach(x=>{const e=document.createElement("option");e.value=x;e.textContent=x;s.append(e)});s.value=v||"miembro"}
 const $=id=>document.getElementById(id);
 let tt;const msg=t=>{const el=$("toast");el.textContent=t;el.classList.add("show");clearTimeout(tt);tt=setTimeout(()=>el.classList.remove("show"),3500)};
@@ -186,7 +202,7 @@ function render(){
   const q=$("q").value.trim().toLowerCase();
   const grp=i=>items.filter(j=>j.u.trim()===i.u.trim());
   const test={intro:g=>g.some(j=>j.intro),nointro:g=>!g.some(j=>j.intro),bz:g=>g.some(j=>j.bz),inact:g=>g.some(j=>j.inact),warn:g=>g.some(j=>(j.w||0)>0)};
-  const res=items.filter(i=>[i.p,i.u,i.f,i.t||"miembro"].join(" ").toLowerCase().includes(q)&&[...fset].every(k=>test[k](grp(i))));
+  const res=items.filter(i=>[i.p,i.u,i.f,tagOf(i)].join(" ").toLowerCase().includes(q)&&[...fset].every(k=>test[k](grp(i))));
   $("cnt").textContent=res.length+" de "+items.length+" roles";
   const box=$("list");box.textContent="";
   const groups={};
@@ -196,12 +212,12 @@ function render(){
     const h=document.createElement("h2");h.textContent=g.name+" ";
     const c=document.createElement("small");c.textContent=g.list.length;h.append(c);box.append(h);
     g.list.forEach(i=>{
-      const d=document.createElement("div");d.className="card row r-"+(i.t||"miembro");
+      const d=document.createElement("div");d.className="card row r-"+tagOf(i);
       if(!seen.has(i.id)){seen.add(i.id);d.className+=" pop";d.style.animationDelay=Math.min(ord++,12)*45+"ms"}
       const ct=celeb.get(i.u.trim());if(ct&&Date.now()-ct<1500)d.className+=" yay";
       const t=document.createElement("div");
       const b=document.createElement("b");b.textContent=i.p;
-      {const tg=document.createElement("em");tg.className="tag "+(i.t||"miembro");tg.textContent=i.t||"miembro";b.append(" ",tg)}
+      {const tg=document.createElement("em");tg.className="tag "+tagOf(i);tg.textContent=tagOf(i);b.append(" ",tg)}
       const s=document.createElement("span");s.className="id";s.textContent="ID: ";
       const code=document.createElement("code");code.textContent=i.u;s.append(code);
       const l=document.createElement("label");l.className="intro";
@@ -267,7 +283,7 @@ function render(){
         const info=document.createElement("div");info.className="id";info.style.marginBottom="8px";info.textContent="ID: "+i.u;
         const ip=document.createElement("input");ip.value=i.p;ip.placeholder="Personaje";
         const iff=document.createElement("input");iff.value=i.f;iff.placeholder="Fandom";
-        const sel=document.createElement("select");fill(sel,i.t);
+        const sel=document.createElement("select");fill(sel,tagOf(i));
         const dl=document.createElement("div");dl.className="dtl";dl.textContent="Fecha de ingreso";
         const dt=document.createElement("input");dt.type="date";dt.value=i.fi||"";
         const err=document.createElement("div");err.className="err";
@@ -281,7 +297,13 @@ function render(){
           const dup=items.find(j=>j.id!==i.id&&n(j.p)===n(p)&&n(j.f)===n(f));
           if(dup){err.textContent="¡Este rol ya está ocupado! Lo tiene el ID "+dup.u;return}
           ok.disabled=true;
-          try{await col.doc(i.id).update({p,f,t:sel.value,fi:dt.value});msg("Rol actualizado ✓")}
+          try{
+            const otros=items.filter(j=>j.id!==i.id&&j.u.trim()===i.u.trim());
+            const bt=writeBatch(fdb);
+            bt.update(doc(fdb,"roles",i.id),{p,f,t:sel.value,fi:dt.value});
+            otros.forEach(j=>{if((j.t||"miembro")!==sel.value)bt.update(doc(fdb,"roles",j.id),{t:sel.value})});
+            await bt.commit();
+            msg(otros.length?"Rol actualizado ✓ · etiqueta aplicada a todos los roles del ID":"Rol actualizado ✓")}
           catch(e){ok.disabled=false;err.textContent="No se pudo guardar"}
         };
         d.append(info,ip,iff,sel,dl,dt,ok,no,err);
@@ -304,21 +326,27 @@ segs.forEach(b=>b.onclick=()=>{
   segs.forEach(x=>x.classList.toggle("on",x.dataset.v===""?fset.size===0:fset.has(x.dataset.v)));
   render();
 });
+let tTouched=false;$("t").onchange=()=>{tTouched=true};
+$("u").oninput=()=>{tTouched=false;const k=$("u").value.trim();const ex=k&&items.find(j=>j.u.trim()===k);if(ex)$("t").value=tagOf(ex)};
 $("add").onclick=async()=>{
-  const p=$("p").value.trim(),u=$("u").value.trim(),f=$("f").value.trim(),t=$("t").value,fi=$("fi").value||today();
+  const p=$("p").value.trim(),u=$("u").value.trim(),f=$("f").value.trim(),t0=$("t").value,fi=$("fi").value||today();
   if(!p||!u||!f){msg("Llena los tres campos");return}
   if(!col){msg("Base de datos no disponible");return}
   const n=s=>s.trim().toLowerCase();
   const mine=items.filter(i=>i.u.trim()===u);
   if(mine.length>=2){msg("Este usuario ya tiene 2 roles: "+mine.map(i=>i.p+" ("+i.f+")").join(", "));return}
+  const t=(mine.length&&!tTouched)?tagOf(mine[0]):t0;
   const dup=items.find(i=>n(i.p)===n(p)&&n(i.f)===n(f));
   if(dup){msg("¡Este rol ya está ocupado! "+dup.p+" ("+dup.f+") lo tiene el ID "+dup.u);return}
   try{
     const bzv=$("bz").checked||mine.some(j=>j.bz),iv=$("ih").checked||mine.some(j=>j.intro);
-    await col.add({p,u,f,t,fi,bz:bzv,intro:iv,w:Math.max(0,...mine.map(j=>j.w||0)),inact:mine.some(j=>j.inact)});
+    const bt=writeBatch(fdb);
+    bt.set(doc(collection(fdb,"roles")),{p,u,f,t,fi,bz:bzv,intro:iv,w:Math.max(0,...mine.map(j=>j.w||0)),inact:mine.some(j=>j.inact)});
+    mine.forEach(j=>{if((j.t||"miembro")!==t)bt.update(doc(fdb,"roles",j.id),{t})});
+    await bt.commit();
     if(bzv)await Promise.all(mine.filter(j=>!j.bz).map(j=>col.doc(j.id).update({bz:true})));
     if(iv)await Promise.all(mine.filter(j=>!j.intro).map(j=>col.doc(j.id).update({intro:true})));
-    $("p").value=$("u").value=$("f").value="";$("t").value="miembro";$("fi").value=today();$("bz").checked=false;$("ih").checked=false;msg("Agregado ✓");
+    $("p").value=$("u").value=$("f").value="";$("t").value="miembro";tTouched=false;$("fi").value=today();$("bz").checked=false;$("ih").checked=false;msg("Agregado ✓");
   }catch(e){msg("No se pudo guardar")}
 };
 function ui(){
@@ -338,11 +366,11 @@ $("auth").onclick=async()=>{
 onAuthStateChanged(auth,u=>{
   isAdmin=!!u&&u.email===ADMIN&&u.emailVerified;
   if(u&&!u.isAnonymous&&!isAdmin){alert("Esta cuenta no tiene permisos de edición");signOut(auth)}
-  ui();render();
+  ui();render();heal();
 });
 onSnapshot(collection(fdb,"roles"),sn=>{
   items=sn.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.p||"").localeCompare(b.p||""));
-  loaded=true;ui();render();
+  loaded=true;ui();render();heal();
 },()=>{$("cnt").textContent="Error al cargar la lista"});
 render();ui();
 </script>

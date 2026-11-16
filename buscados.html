@@ -161,6 +161,9 @@ header>.up{position:absolute;inset:0;z-index:0;pointer-events:none}
 @keyframes rise2{0%{transform:translateY(0) rotate(0);opacity:0}15%{opacity:.75}100%{transform:translateY(-190px) rotate(120deg);opacity:0}}
 @media (prefers-reduced-motion:no-preference){.stats{animation:rise .6s .08s cubic-bezier(.2,.8,.2,1) both}}
 .lnk{width:auto;margin:10px 0 0;padding:4px 0;background:none;box-shadow:none;color:var(--muted);font-size:.8rem;font-weight:600;text-decoration:underline}button.lnk::after{display:none}
+.by{margin-top:10px;font:700 .85rem "Nunito",system-ui,sans-serif;letter-spacing:.08em;color:var(--ink,#3a2314)}
+.by a{color:inherit;text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1.5px}
+.by a:hover{color:#fff}
 #enterwrap{display:none;text-align:center}
 body.gate #enterwrap{display:block}
 body.gate main{min-height:calc(100dvh - 48px);display:flex;flex-direction:column;justify-content:center}
@@ -204,6 +207,7 @@ body.entered header{animation:drop2 .6s cubic-bezier(.2,.8,.2,1) both}
     <div class="up" id="up" aria-hidden="true"></div>
     <div class="fl"><span>✿</span><span>✿</span><span>✿</span></div>
     <h1>Kawsay</h1>
+    <div class="by">hecho por: <a href="https://discord.com/users/1129968719326613564" target="_blank" rel="noopener noreferrer">Rukia Kuchiki</a></div>
   </header>
   <div id="enterwrap"><button id="enter" type="button">✿ Roles buscados ✿</button></div>
   <div class="stats" id="stats" hidden aria-label="Resumen del tablón">
