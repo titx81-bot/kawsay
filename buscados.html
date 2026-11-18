@@ -123,17 +123,19 @@ header p::before,header p::after{content:"";width:34px;height:1px;background:var
 .who .nm{color:var(--pink)}
 body{background:linear-gradient(180deg,rgba(214,150,148,.42),rgba(110,72,62,.22) 220px,transparent 560px),radial-gradient(1px 1px at 12px 12px,rgba(255,220,210,.12) 1px,transparent 1.6px) 0 0/24px 24px,var(--bg);background-attachment:fixed}
 /* ---- Estilo foro divertido ---- */
-.bub{position:relative;display:flex;gap:14px;align-items:flex-start;padding:16px;border-radius:22px;background:var(--card);border:1px solid var(--border)}
+.bub{position:relative;display:block;padding:16px;border-radius:22px;background:var(--card);border:1px solid var(--border)}
 .post:nth-child(odd) .bub{transform:rotate(-.5deg)}
 .post:nth-child(even) .bub{transform:rotate(.5deg)}
 .post .bub:hover{transform:rotate(0) translateY(-2px)}
 .post:first-child .bub::before{content:"❀";color:var(--pink);position:absolute;top:-12px;right:16px;font-size:1.3rem;filter:drop-shadow(0 2px 2px rgba(0,0,0,.4))}
-.side{flex:none;width:66px;text-align:center}
-.side .av{width:50px;height:50px;margin:0 auto 6px;font-family:"Playfair Display",Georgia,serif;font-size:1.3rem}
-.body>.nm{display:block;margin-bottom:4px;font-size:.8rem;font-weight:800;line-height:1.2;color:var(--pink);overflow-wrap:anywhere}
+.side{flex:none}
+.side .av{width:50px;height:50px;margin:0;font-family:"Playfair Display",Georgia,serif;font-size:1.3rem}
+.hd{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.ident{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.ident .nm{font-size:.9rem;font-weight:800;line-height:1.2;color:var(--pink);overflow-wrap:anywhere}
+.ident .num{font-size:.7rem;font-weight:800;letter-spacing:.08em;color:var(--muted)}
 .body{flex:1;min-width:0}
-.top{display:flex;align-items:center;gap:8px;font-size:.7rem;font-weight:800;letter-spacing:.08em;color:var(--muted)}
-.top .new{margin-left:auto;padding:2px 9px;border-radius:99px;background:var(--pink);color:var(--ink);letter-spacing:.02em}
+.hd .new{flex:none;margin-left:auto;font-size:.7rem;font-weight:800;padding:2px 9px;border-radius:99px;background:var(--pink);color:var(--ink);letter-spacing:.02em}
 .ttl{margin:6px 0 8px;font-family:"Playfair Display",Georgia,serif;font-size:1.3rem;line-height:1.2;color:var(--text)}
 .ttl b{font-size:inherit;color:var(--pink)}
 .chip{display:inline-block;padding:3px 12px;border-radius:99px;font-size:.82rem;font-weight:700;color:var(--pink);background:rgba(244,194,194,.14);border:1px solid rgba(244,194,194,.35)}
@@ -189,7 +191,7 @@ body.gate #enter{animation:beat 2.2s ease-in-out infinite,ring 2.2s ease-out inf
 body.gate #enter::after{animation:sheen 2.6s 1s ease-in-out infinite}
 body.entered header{animation:drop2 .6s cubic-bezier(.2,.8,.2,1) both}
 .tools{animation:rise .6s .18s both}
-.top .new{animation:tw 2.2s ease-in-out infinite}
+.hd .new{animation:tw 2.2s ease-in-out infinite}
 .post:first-child .bub::before{transform-origin:50% 100%;animation:sway 3s ease-in-out infinite}
 .chip{transition:transform .15s}.chip:hover{transform:translateY(-1px) scale(1.04)}
 .rb:active:not(:disabled){transform:scale(.88)}
@@ -379,13 +381,14 @@ const fapp=initializeApp(firebaseConfig),fdb=getFirestore(fapp),auth=getAuth(fap
   function post(r){
     var e=r.e,k=r.id,wrap=el('div','post');
     if(!seen[k]){seen[k]=1;wrap.classList.add('in');wrap.style.animationDelay=Math.min(nIdx++,10)*70+'ms'}
-    var b=el('div','bub'),side=el('div','side'),bd=el('div','body'),top=el('div','top'),h=el('div','ttl');
+    var b=el('div','bub'),hd=el('div','hd'),side=el('div','side'),ident=el('div','ident'),bd=el('div','body'),h=el('div','ttl');
     side.appendChild(el('span','av',(Array.from(String(e.who).trim())[0]||'?').toUpperCase()));
-    top.appendChild(el('span','num','#'+(r.n||'')));
-    if(Date.now()-e.ts<864e5)top.appendChild(el('span','new','✦ nuevo'));
+    ident.appendChild(el('span','nm',e.who));ident.appendChild(el('span','num','#'+(r.n||'')));
+    hd.appendChild(side);hd.appendChild(ident);
+    if(Date.now()-e.ts<864e5)hd.appendChild(el('span','new','✦ nuevo'));
     h.appendChild(document.createTextNode('Se busca a '));h.appendChild(el('b',null,e.char));
-    bd.appendChild(el('span','nm',e.who));bd.appendChild(top);bd.appendChild(h);bd.appendChild(el('span','chip','✿ '+e.fandom));
-    b.appendChild(side);b.appendChild(bd);
+    bd.appendChild(h);bd.appendChild(el('span','chip','✿ '+e.fandom));
+    b.appendChild(hd);b.appendChild(bd);
     if(e.msg){var m=el('div','msg','“'+e.msg+'”');bd.appendChild(m)}
     var foot=el('div','foot'),tm=el('small',null,ago(e.ts));
     tm.title=new Date(e.ts).toLocaleString();
